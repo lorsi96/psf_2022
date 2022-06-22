@@ -11,7 +11,7 @@ Maestria en sistemas embebidos
 1. Si reporta que el usuario no tiene suficientes permisos, revisar esta [guía][sudoless]
 1. Utilizar la herramienta `ciaa-tools`:
     ```sh
-    ./ciaa-tools --build --flash ./clases/1_clase/ciaa/psf1
+    ./ciaa-tools --build --flash ./clases/1_clase/ciaa/psf1/
     ```
 
 [docker]: https://get.docker.com/
