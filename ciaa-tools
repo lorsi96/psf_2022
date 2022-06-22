@@ -18,6 +18,10 @@ print_help() {
     exit 0
 }
 
+# Build image is needed.
+docker image inspect $DOCKER_TAG >/dev/null || \
+docker image build -t $DOCKER_TAG .
+
 # Trigger help menu if used incorrectly or -h.
 if [[ $# -eq 0 ]] ; then
     print_help
@@ -48,11 +52,6 @@ while [[ $# -gt 0 ]]; do
 done
 
 set -- "${POSITIONAL_ARGS[@]}"
-
-# Build image is needed.
-if ! [[ "docker image inspect $DOCKER_TAG >/dev/null 2>&1" ]]; then
-  docker image build -t $DOCKER_TAG .
-fi
 
 # Run command.
 docker run \
