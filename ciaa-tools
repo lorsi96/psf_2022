@@ -1,0 +1,61 @@
+#!/bin/bash
+readonly DOCKER_TAG="lorsi/ciaa-development-environment:1.0.0"
+POSITIONAL_ARGS=()
+CMD="make "
+
+# Functions
+print_help() {
+    echo "Usage: $0 [OPTION]... [FOLDER]..."
+    echo ""
+    echo "-b, --build            builds the application to <directory>/out"
+    echo "-f, --flash            flashes the application to edu-ciaa-nxp"
+    echo "-h, --help             shows the help menu"
+    echo ""
+    echo "Note: 'undefined reference to main' erros are often due to not choosing a directory with a 'config.mk file'"
+    echo "Author: lorsi96"
+    exit 0
+}
+
+# Trigger help menu if used incorrectly or -h.
+if [[ $# -eq 0 ]] ; then
+    print_help
+fi
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -b|--build)
+      CMD+="all "
+      shift # past argument
+      ;;
+    -f|--flash)
+      CMD+="download "
+      shift # past argument
+      ;;
+    -h|--help)
+      print_help
+      shift # past argument
+      shift # past value
+      ;;
+    *)
+      POSITIONAL_ARGS+=("$1") # save positional arg
+      shift # past argument
+      ;;
+  esac
+done
+
+set -- "${POSITIONAL_ARGS[@]}"
+
+# Build image is needed.
+if ! [[ "docker image inspect $DOCKER_TAG >/dev/null 2>&1" ]]; then
+  docker image build -t $DOCKER_TAG .
+fi
+
+# Run command.
+docker run \
+  -it --rm \
+  --privileged \
+  --name lorsi-ciaa \
+  -v $(pwd)/$1:/ciaa/examples/c/app  \
+  -v /dev:/dev \
+  --workdir /ciaa \
+  $DOCKER_TAG \
+  /bin/bash -c "$CMD"  
