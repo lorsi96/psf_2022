@@ -1,5 +1,6 @@
 #!/bin/bash
 readonly DOCKER_TAG="lorsi/ciaa-development-environment:1.0.0"
+readonly TARGET_DIR="/ciaa/examples/c/app"
 POSITIONAL_ARGS=()
 CMD=""
 
@@ -33,7 +34,7 @@ while [[ $# -gt 0 ]]; do
       shift # past argument
       ;;
     -m|--monitor)
-      CMD+="picocom  /dev/ttyUSB1 -b 460800 --log log.bin #> /dev/null; "
+      CMD+="picocom  /dev/ttyUSB1 -b 460800 --log $TARGET_DIR/log.bin #> /dev/null; "
       shift # past argument
       ;;
     -h|--help)
@@ -58,7 +59,7 @@ docker run \
   -it --rm \
   --privileged \
   --name lorsi-ciaa \
-  -v $(pwd)/$1:/ciaa/examples/c/app  \
+  -v $(pwd)/$1:$TARGET_DIR  \
   -v /dev:/dev \
   --workdir /ciaa \
   $DOCKER_TAG \
