@@ -6,8 +6,8 @@ import os
 import io
 import serial
 
-STREAM_FILE=("/dev/ttyUSB3","serial")
-#STREAM_FILE=("log.bin","file")
+STREAM_FILE=("/dev/ttyUSB1","serial")
+# STREAM_FILE=("log.bin","file")
 
 header = { "head": b"head", "id": 0, "N": 128, "fs": 10000, "tail":b"tail" }
 fig    = plt.figure ( 1 )
